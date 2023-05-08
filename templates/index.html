@@ -1,0 +1,18 @@
+<table>
+<tr>
+  <th> Name </th>
+  <th> Medicine Taken </th>
+  <th> Timestamp </th>
+</tr>
+  {% if results %}
+    {% for result in results %}
+      <tr>
+        <td>{{  result[0] }}</td>
+        <td>{{  result[1] }}</td>
+        <td>{{  result[2] }}</td>
+      </tr>
+    {% endfor %}
+  {% endif %}
+</table>
+<a href="/addmed">Add medicine</a>
+<a href="/dashboard">Main page</a>
