@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add Elderly</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <h1>Add Elderly</h1>
+    <form method="POST" action="/add_elderly">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required><br><br>
+      <label for="age">Age:</label>
+      <input type="number" id="age" name="age" required><br><br>
+      <label for="gender">Gender:</label>
+      <select id="gender" name="gender" required>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select><br><br>
+      <input type="submit" value="Add">
+    </form>
+  </body>
+</html>

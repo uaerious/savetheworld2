@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
     <h1>Welcome, {{ username }}!</h1>
@@ -11,5 +12,6 @@
     </form>
     <a href="/addmed">Add medicine</a>
     <a href="/home">View All</a>
+    <a href="/apps">Appliances</a>
   </body>
 </html>

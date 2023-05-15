@@ -2,18 +2,25 @@
 <html>
   <head>
     <title>Medicine Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
-    <h1>Add your medicine</h1>
+    <h1>Add medicine for elderly</h1>
     <form action="/addmed" method="POST">
+      <label for="elderly_name">Elderly Name:</label>
+      <select id="elderly_name" name="elderly_name">
+        {% for elderly in elderlies %}
+          <option value="{{ elderly }}">{{ elderly }}</option>
+        {% endfor %}
+      </select><br>
       <label for="medicine">Medicine:</label>
-      <input type="medicine" id="medicine" name="medicine"><br>
+      <input type="text" id="medicine" name="medicine"><br>
       <label for="medicine_timing">Medicine Time:</label>
-      <input type="medicine_timing" id="medicine_timing" name="medicine_timing" onclick="showDateTime()">
-<br>
+      <input type="text" id="medicine_timing" name="medicine_timing" onclick="showDateTime()">
+      <br>
       <button type="submit">Add Data</button>
     </form>
-        <script>
+    <script>
       function showDateTime() {
         var now = new Date();
         var date = now.toLocaleDateString();
@@ -26,4 +33,3 @@
     <a href="/home">View All</a>
   </body>
 </html>
-

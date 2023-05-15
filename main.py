@@ -17,14 +17,21 @@ c.execute('''CREATE TABLE IF NOT EXISTS users
 conn.commit()
 conn.close()
 
-# database2
+# Connect to the database
 conn2 = sqlite3.connect('client.db')
+
+# Create a cursor object
 c2 = conn2.cursor()
-c2.execute('''CREATE TABLE IF NOT EXISTS clients
-             (cid INTEGER PRIMARY KEY AUTOINCREMENT,
+
+# Create the elderly table if it does not exist
+c2.execute('''CREATE TABLE IF NOT EXISTS elderly
+             (eid INTEGER PRIMARY KEY AUTOINCREMENT,
               name TEXT NOT NULL,
-              medicine TEXT NOT NULL,
-              medicine_timing DATETIME NOT NULL)''')
+              age INTEGER NOT NULL,
+              user_id INTEGER REFERENCES users(uid)
+              )''')
+
+# Commit the changes and close the connection
 conn2.commit()
 conn2.close()
 
@@ -32,6 +39,10 @@ conn2.close()
 @app.route('/')
 def index():
     return redirect('/login')
+
+@app.route('/apps', methods=['GET', 'POST'])
+def apps():
+    return render_template('appliances.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -48,6 +59,7 @@ def login():
         if user:
             session['logged_in'] = True
             session['username'] = user[1]
+            session['uid'] = user[0] # Add this line to set the uid key in the session
             return redirect('/dashboard')
         else:
             return render_template('login.html', error='Invalid username or password')
@@ -61,24 +73,50 @@ def dashboard():
     else:
         return redirect('/login')
 
+@app.route('/add_elderly', methods=['GET', 'POST'])
+def add_elderly():
+    if request.method == 'POST':
+        # Retrieve form data
+        name = request.form['name']
+        age = request.form['age']
+        # Add elderly to database
+        conn2 = sqlite3.connect('client.db')
+        c2 = conn2.cursor()
+        c2.execute('INSERT INTO elderly (name, age) VALUES (?, ?)', (name, age))
+        conn2.commit()
+        conn2.close()
+        return redirect('/dashboard')
+    else:
+        return render_template('add_elderly.html')
+
+
 @app.route('/addmed', methods=['GET', 'POST'])
 def addmed():
-    if 'logged_in' in session and session['logged_in']:
-        if request.method == 'POST':
-            name = session['username']
-            medicine = request.form['medicine']
-            medicine_timing = request.form['medicine_timing']
-            
-            conn2 = sqlite3.connect('client.db')
-            c2 = conn2.cursor()
-            c2.execute('INSERT INTO clients (name, medicine, medicine_timing) VALUES (?, ?, ?)', (name, medicine, medicine_timing))
-            conn2.commit()
-            conn2.close()
-            return redirect('/home')
-        else:
-            return render_template('addmed.html', username=session['username'])
-    else:
+    if 'logged_in' not in session:
         return redirect('/login')
+    if request.method == 'POST':
+        user_id = session['uid']
+        medicine = request.form['medicine']
+        quantity = request.form['quantity']
+        
+        conn2 = sqlite3.connect('medicines.db')
+        c2 = conn2.cursor()
+        c2.execute('INSERT INTO medicines(user_id, medicine, quantity) VALUES (?, ?, ?)', (user_id, medicine, quantity))
+        conn2.commit()
+        conn2.close()
+        
+        return redirect('/dashboard')
+    else:
+        return render_template('addmed.html')
+
+@app.route('/lights', methods=['POST'])
+def lights():
+    # Handle the lights functionality here
+    # For example, you can toggle the lights status in the database or perform any other action
+    
+    # After handling the lights, you can redirect the user back to the appliances page
+    return redirect('/apps')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Appliances</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <h1>Welcome, {{ username }}!</h1>
+    <p>These are your appliances.</p>
+    <style>
+    form[action="{{ url_for('lights') }}" method="POST"] button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+
+    form[action="{{ url_for('lights') }}" method="POST"] button img {
+      height: 20px;
+      margin-right: 10px;
+    }
+    </style>
+
+    <form action="{{ url_for('lights') }}" method="POST">
+      <button type="submit">
+        <img src="{{ image_url }}" alt="Lights">
+        Lights
+      </button>
+    </form>
+
+    <form action="{{ url_for('logout') }}" method="POST">
+      <input type="submit" value="Logout">
+    </form>
+  </body>
+</html>
